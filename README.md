@@ -12,7 +12,7 @@ The ambitions are as follows:
 ## Circuit Generation
 Provable Programs
 - [x] API
-- [ ] DSL
+- [x] DSL
 - [x] R1CS
 
 ## Proving Systems
@@ -51,7 +51,7 @@ Structured Reference String (SRS) generation for Setup
 
 ## Special Thanks
 
-Check out these great project which have been the inspiration and reference for Nescience.
+Check out these great projects which have been the inspiration and reference for Nescience.
 
 - [Circom](https://github.com/iden3/circom) / [SnarkJS](https://github.com/iden3/snarkjs) (Javascript)
 - [libsnark](https://github.com/scipr-lab/libsnark) (C++)
