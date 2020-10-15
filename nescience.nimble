@@ -31,7 +31,7 @@ proc test(name: string, lang = "c") =
 task test, "Run tests":
   # test "all_tests"
   # test "test_r1cs"
-  test "test_circuit"
+  test "test_dsl"
 
 task nimbus, "Build Nescience":
   buildBinary "nescience", "nescience/", "-d:chronicles_log_level=TRACE"

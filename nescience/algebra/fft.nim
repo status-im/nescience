@@ -1,4 +1,4 @@
-import stint, bitops, strutils
+import stint, bitops
 import bncurve as bn256
 
 type

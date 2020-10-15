@@ -4,6 +4,29 @@ import tables
 import ../nescience/circuit
 # import ../nescience/proof_systems/groth16
 
+test "Shorthand Addition":
+    var circuit = newCircuit()
+    var s = circuit.input("s", Private)
+    var sEqual = circuit.input("sEqual", Public)
+    var x = s + 4
+
+    circuit.equal(sEqual, x)
+
+    let r1cs = circuit.toR1CS()
+    echo r1cs
+
+    let solution = {
+        "s": newInput(3, Private),
+        "sEqual": newInput(7, Public)
+    }.toTable
+    
+    let (a,b,c) = r1cs.solve(solution)
+
+    for i in 0..<r1cs.numberOfConstraints:
+        echo a[i], " x ", b[i], " = ", c[i]
+        check (a[i] * b[i]) == c[i]
+
+
 test "Input - toConstraint":
     var circuit = newCircuit()
     let s = circuit.input("s", Private)
@@ -298,29 +321,3 @@ test "subtraction":
     for i in 0..<r1cs.numberOfConstraints:
         echo a[i], " x ", b[i], " = ", c[i]
         check (a[i] * b[i]) == c[i]
-
-# # test "circuit dsl":
-
-# #     # circuit circuit(Int256):
-# #     #     ## y = x^3 + x + 5
-# #     #     proc main(x:Private, y:Public) =
-# #     #         let x2 = x * x
-# #     #         var x3 = x2 * x
-# #     #         let x4 = x3 + x
-# #     #         let x5 = x4 + 5
-# #     #         return x5 == y
-    
-# #     # circuit factor:
-# #     #     ## a * b = c
-# #     #     proc main(a,b:Private[int], c:Public[int]):int =
-# #     #         return a * b == c
-
-# #     # let witness = factor.generateWitness(private, public, out?)
-# #     # let r1cs = factor.generateR1CS()
-
-# #     # circuit circuit:
-# #     #     ## x**3 + x * 5 = y
-# #     #     proc main*(x:Private, y:Public) =
-# #     #         let x3 = x^3
-# #     #         return y == x3 + x * 5
-    

@@ -26,6 +26,7 @@ proc addConstraint*[T](circuit: var Circuit[T], constraint: var Constraint[T]) =
 
 proc newConstraint*[T](circuit: var Circuit[T], expressions: seq[Expression[T]]): Constraint[T] =
     result = Constraint[T](
+        circuit: circuit,
         id: -1,
         outputWire: Wire(
             private: true,
@@ -56,6 +57,7 @@ proc newCircuit*(T: typedesc = Int256): Circuit[T] =
     # Allows us to instantiate each constant as an output signal for use in other expressions
     # TODO should oneWire just be an allocated constant expression, rather than a special case?
     var oneConstraint = Constraint[T](
+        circuit: circuit,
         id: -1,
         outputWire: Wire(
             name: ONE_WIRE,

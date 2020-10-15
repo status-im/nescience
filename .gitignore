@@ -19,3 +19,7 @@ bin/
 *.la
 *.exe
 *.dll
+
+# Housekeeping
+*.code-workspace
+notes.txt

@@ -1,4 +1,4 @@
-import strformat, stint, tables, sequtils
+import strformat, stint, tables, sequtils, algorithm
 
 import circuit, types, utils
 
@@ -10,6 +10,7 @@ proc input*[T](circuit: var Circuit[T], name: string, access: InputKind): Constr
     assert not circuit.hasInput(name),
         &"The input {name} has already been defined"
     var constraint = Constraint[T](
+        circuit: circuit,
         id: -1,
         outputWire: Wire(
             name: name,
@@ -60,6 +61,16 @@ proc add*[T](circuit: var Circuit[T], a, b: Constraint[T] | Constant, args: vara
     for i in 0..<args.len:
         result = circuit.add(result, args[i])
 
+func `+`*[T](x, y: var Constraint[T]): Constraint[T] {.inline.} =
+    assert x.circuit == y.circuit,
+        "Constraints must belong to same circuit"
+    x.circuit.add(x, y)
+
+func `+`*[T](x: var Constraint[T], y: Constant): Constraint[T] {.inline.} =
+    x.circuit.add(x, y)
+
+func `+`*[T](x: Constant, y: var Constraint[T]): Constraint[T] {.inline.} =
+    y.circuit.add(x, y)
 
 ## Subtraction
 
@@ -100,6 +111,17 @@ proc sub*[T](circuit: var Circuit, a, b: Constraint[T] | Constant, args: varargs
         result = circuit.sub(result, args[i])
 
 
+func `-`*[T](x, y: var Constraint[T]): Constraint[T] {.inline.} =
+    assert x.circuit == y.circuit,
+        "Constraints must belong to same circuit"
+    x.circuit.sub(x, y)
+
+func `-`*[T](x: var Constraint[T], y: Constant): Constraint[T] {.inline.} =
+    x.circuit.sub(x, y)
+
+func `-`*[T](x: Constant, y: var Constraint[T]): Constraint[T] {.inline.} =
+    y.circuit.sub(x, y)
+
 ## Multiplication
 
 proc mul*[T](circuit: var Circuit[T], a, b: Constraint[T]): Constraint[T] =
@@ -130,6 +152,27 @@ proc mul*[T](circuit: var Circuit[T], a, b: Constraint[T] | Constant, args: vara
     result = circuit.mul(a, b)
     for i in 0..<args.len:
         result = circuit.mul(result, args[i])
+
+func `*`*[T](x, y: var Constraint[T]): Constraint[T] {.inline.} =
+    assert x.circuit == y.circuit,
+        "Constraints must belong to same circuit"
+    x.circuit.mul(x, y)
+
+func `*`*[T](x: var Constraint[T], y: Constant): Constraint[T] {.inline.} =
+    x.circuit.mul(x, y)
+
+func `*`*[T](x: Constant, y: var Constraint[T]): Constraint[T] {.inline.} =
+    y.circuit.mul(x, y)
+
+## Exponentiation
+
+proc pow*[T](circuit: var Circuit[T], x: Constraint[T], y: SomeInteger): Constraint[T] =
+    result = x
+    for i in 0..<y-1:
+        result = circuit.mul(result, x)
+
+func `^`*[T](x: var Constraint[T], y: SomeInteger): Constraint[T] {.inline.} =
+    x.circuit.pow(x, y)
 
 ## Division
 
@@ -165,7 +208,18 @@ proc `div`*[T](circuit: var Circuit[T], a, b: seq[Term[T]]): Constraint[T] =
     # TODO Quadratic Equation that divides terms
     assert false, "Not Implemented"
 
-## Equality
+func `/`*[T](x, y: var Constraint[T]): Constraint[T] {.inline.} =
+    assert x.circuit == y.circuit,
+        "Constraints must belong to same circuit"
+    x.circuit.div(x, y)
+
+func `/`*[T](x: var Constraint[T], y: Constant): Constraint[T] {.inline.} =
+    x.circuit.div(x, y)
+
+func `/`*[T](x: Constant, y: var Constraint[T]): Constraint[T] {.inline.} =
+    y.circuit.div(x, y)
+
+## Equality (Well, Assertions)
 
 proc equal*[T](circuit: var Circuit[T], a, b: Constraint[T]) =
     ## a == b

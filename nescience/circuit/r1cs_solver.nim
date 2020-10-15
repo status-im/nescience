@@ -1,4 +1,4 @@
-import stint, tables, strformat, sequtils, bitops
+import stint, tables
 
 import types, utils
 

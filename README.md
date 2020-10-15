@@ -49,3 +49,11 @@ Standard Library for Circuits
 Structured Reference String (SRS) generation for Setup
 - [ ] ["Powers of Tau"](https://eprint.iacr.org/2017/1050) protocol for groth16
 
+## Special Thanks
+
+Check out these great project which have been the inspiration and reference for Nescience.
+
+- [Circom](https://github.com/iden3/circom) / [SnarkJS](https://github.com/iden3/snarkjs) (Javascript)
+- [libsnark](https://github.com/scipr-lab/libsnark) (C++)
+- [Gnark](https://github.com/ConsenSys/gnark) (Go)
+- [Bellman](https://github.com/zkcrypto/bellman/) (Rust)

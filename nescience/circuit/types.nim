@@ -84,6 +84,7 @@ type
     # Constraints
 
     Constraint*[T] = object
+        circuit*: Circuit[T]
         expressions*: seq[Expression[T]]
         outputWire*: Wire
         id*: int64
@@ -96,7 +97,7 @@ type
     
     # Circuits
 
-    Circuit*[T] = object
+    Circuit*[T] = ref object
         singleOutputs*: Table[int64, Constraint[T]]
         multiOutputs*: seq[Expression[T]]
         zeroOutputs*: seq[Expression[T]]
